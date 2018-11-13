@@ -1,8 +1,11 @@
 import java.awt.EventQueue;
 
+
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
@@ -13,19 +16,50 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 
+
+
 public class ATM_GUI {
 
 	private JFrame frame;
+	//SCB varables 
+	//time currentTime
+	private int Timer;
+	private static final int MaxALLowableWithdraw = 500;
+	private int AmountToWithdraw;
+	//statuses 
+	private boolean BillsDisburseDriver = true;
+	private boolean BillStorageStatus = true;
+	private boolean MonitorStatus = true;
+	private boolean CardScannerStatus = true;
+	private boolean BullsDisburserStatus = true;
 
+	private boolean CardInserted;
+	
+	private boolean DataEntered;
+	private Vector<Integer> Data = new Vector<Integer>();
+	
+	//this is the systems state varaible
+	private int PN = 0;
+	
+	private boolean EnterKeyPressed;
+	private boolean CancelkeyPressed;
+	private boolean EjectCard;
+	//signals are not included 
+	
+	//For system to write to user
+	private JLabel mainTextBox;
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					ATM_GUI window = new ATM_GUI();
 					window.frame.setVisible(true);
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -33,6 +67,22 @@ public class ATM_GUI {
 		});
 	}
 
+	protected void Welcome() {
+		mainTextBox.setText("Welcome! Please enter Your card");
+		if(MonitorStatus == false) {
+			//throw exception 
+		}
+		if(CardScannerStatus == false) {
+			//throw exception 
+		}
+		
+	}
+	private void addData(int dataValue) {
+		if(Data.size() == 4) {
+			DataEntered = true;
+		}
+		Data.add(dataValue);
+	}
 	/**
 	 * Create the application.
 	 */
@@ -56,6 +106,11 @@ public class ATM_GUI {
 		keyPad_Panel.setLayout(null);
 		
 		JButton keyPad_1 = new JButton("1");
+		keyPad_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				addData(1);
+			}
+		});
 		keyPad_1.setBounds(6, 18, 97, 25);
 		keyPad_Panel.add(keyPad_1);
 		
@@ -109,13 +164,13 @@ public class ATM_GUI {
 		lblGroupAtm.setBounds(12, 22, 1071, 29);
 		frame.getContentPane().add(lblGroupAtm);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
-		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setBackground(Color.BLACK);
-		lblNewLabel.setBounds(115, 135, 314, 263);
-		frame.getContentPane().add(lblNewLabel);
+		mainTextBox = new JLabel("New label");
+		mainTextBox.setVerticalAlignment(SwingConstants.TOP);
+		mainTextBox.setHorizontalAlignment(SwingConstants.LEFT);
+		mainTextBox.setForeground(Color.WHITE);
+		mainTextBox.setBackground(Color.BLACK);
+		mainTextBox.setBounds(115, 135, 314, 263);
+		frame.getContentPane().add(mainTextBox);
 		keyPad_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
@@ -124,5 +179,7 @@ public class ATM_GUI {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
+		Welcome();
+		//CreditCard();
 	}
 }
