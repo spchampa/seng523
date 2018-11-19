@@ -119,6 +119,7 @@ public class ATM_GUI {
 		if(Data.size() == 4) {
 			DataEntered = true;
 			//trigger code to run
+			mytime.timing_done = true;
 			checkPin();
 		}else {
 		Data.add(dataValue);
@@ -135,6 +136,11 @@ public class ATM_GUI {
 		if(Data.size() > 0)
 			Data.remove(Data.lastElement());
 		mainTextBox.setText("PIN:  "+Data.toString());
+	}
+	public void cancel() {
+		Data.clear();
+		Welcome();
+		mytime.timing_done = true;
 	}
 	private void checkPin() {
 		if(DataEntered != true) {
@@ -242,10 +248,19 @@ public class ATM_GUI {
 		btnInsertCardButton.setBounds(813, 287, 186, 25);
 		frame.getContentPane().add(btnInsertCardButton);
 		
+		JButton btnCancelTransaction = new JButton("Cancel Transaction");
+		
+		btnCancelTransaction.setBounds(813, 331, 186, 25);
+		frame.getContentPane().add(btnCancelTransaction);
+		
 		
 		//keypad action listener
 		
-		
+		btnCancelTransaction.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cancel();
+			}
+		});
 		keyPad_BackSpace.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				deleteData();

@@ -18,7 +18,7 @@ public class TimingThread extends Thread{
             		secounds++; 
             		Thread.sleep(3000);
             	}
-            	
+            	if(timing_done == false)
             		gui.clearData();
             		
             		//this is important
