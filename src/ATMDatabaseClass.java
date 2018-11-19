@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.Vector;
 
 public class ATMDatabaseClass {
 	private Connection connect = null;
@@ -14,6 +15,7 @@ public class ATMDatabaseClass {
     
     private final String MYSQL_USERNAME  = "root";
     private final String MYSQL_PASSWORD = "abc123";
+    private final String MYSQL_DATABASE = "system_database";
     
     private void connect() {
     	 try {
@@ -27,6 +29,30 @@ public class ATMDatabaseClass {
     		 
     	 }
     	 
+    }
+    public boolean checkPin(Vector<Integer> pinVector , int accountNum) {
+    	try {
+    		int pin = 0;
+    		for(int i = 0; i <4; i++) {
+    			pin += Math.pow(10, i)*pinVector.get(3-i); 
+    		}
+    		System.out.println("checking for pin : "+ pin);
+    		System.out.println("SELECT user FROM "+MYSQL_DATABASE + " WHERE accountNum  = " + accountNum+ " AND pin = " +pin);
+			preparedStatement  = connect.prepareStatement("SELECT user FROM "+MYSQL_DATABASE + "WHERE accountNum  = " + accountNum+ " AND pin = " +pin+";");
+			resultSet = preparedStatement.executeQuery();
+			if(resultSet.wasNull()) {
+				return false;
+			}
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return false;
+    }
+    public ATMDatabaseClass() {
+    	connect();
     }
 	private void close() {
         try {
@@ -57,6 +83,11 @@ public class ATMDatabaseClass {
 			
 			atmdb.preparedStatement = atmdb.connect.prepareStatement("SELECT user FROM system_database");
 			atmdb.resultSet = atmdb.preparedStatement.executeQuery();
+			while(atmdb.resultSet.next()) {
+				//this should return first name in database it does for me
+				System.out.println(atmdb.resultSet.getString(1));
+			}
+			System.out.println();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

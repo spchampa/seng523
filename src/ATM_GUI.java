@@ -21,6 +21,9 @@ import java.awt.Font;
 //import CreditCard.java;
 public class ATM_GUI {
 
+	//data base class
+	private ATMDatabaseClass atmdb;
+	
 	private JFrame frame;
 	//SCB varables 
 	//time currentTimer
@@ -131,6 +134,10 @@ public class ATM_GUI {
 		if(DataEntered != true) {
 			
 		}
+		System.out.println("In checking pin");
+		boolean waspingood = atmdb.checkPin(Data , 1234567);
+		System.out.println("the pin was: "+waspingood);
+		
 	}
 	/**
 	 * Create the application.
@@ -143,6 +150,9 @@ public class ATM_GUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		//
+		System.out.println("starting");
+		atmdb = new ATMDatabaseClass();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1117, 703);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
