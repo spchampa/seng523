@@ -1,6 +1,7 @@
 
 public class TimingThread extends Thread{
 		
+	public ATM_GUI gui;
 	public boolean timing_done;
 	private int secounds;
 	@SuppressWarnings("deprecation")
@@ -18,7 +19,7 @@ public class TimingThread extends Thread{
             		Thread.sleep(3000);
             	}
             	
-            		timing_done = true;
+            		gui.clearData();
             		
             		//this is important
             		//this.notify();
@@ -28,6 +29,7 @@ public class TimingThread extends Thread{
                 // the Worker object's interrupt() method
                 // is called. interrupt() is inherited
                 // from the Thread class.
+            	
             }
         
     }

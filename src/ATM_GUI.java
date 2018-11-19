@@ -77,6 +77,11 @@ public class ATM_GUI {
 			}
 		});
 	}
+	
+	public void clearData() {
+		Data.clear();
+		mainTextBox.setText("Enter Pin");
+	}
 
 	protected void Welcome() {
 		mainTextBox.setText("Welcome! Please enter Your card");
@@ -96,6 +101,7 @@ public class ATM_GUI {
 		//check in database for number
 		mainTextBox.setText("Welcome " + person_Name +"Please enter Your Pin");
 		mytime = new TimingThread();
+		mytime.gui = this;
 		mytime.start();
 		
 	}
