@@ -4,13 +4,19 @@ import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.Console;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class CreditCard extends JComponent {
+public class  CreditCard extends JComponent {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
 
@@ -21,11 +27,11 @@ public class CreditCard extends JComponent {
 
 	  public CreditCard() {
 	    
-	    setBackground(Color.WHITE);
-	    setBounds(0, 0, 100, 100);
-	    setOpaque(false);
+		this.setBackground(Color.WHITE);
+		this.setBounds(0, 0, 100, 100);
+		this.setOpaque(false);
 
-	    addMouseListener(new MouseListener() {
+		this.addMouseListener(new MouseListener() {
 
 	      @Override
 	      public void mouseClicked(MouseEvent e) { }
@@ -49,7 +55,7 @@ public class CreditCard extends JComponent {
 	      public void mouseExited(MouseEvent e) { }
 
 	    });
-	    addMouseMotionListener(new MouseMotionListener() {
+		this.addMouseMotionListener(new MouseMotionListener() {
 
 	      @Override
 	      public void mouseDragged(MouseEvent e) {
