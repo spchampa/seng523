@@ -31,6 +31,7 @@ public class ATM_GUI {
 	
 	private static final int MaxALLowableWithdraw = 500;
 	private static final int MaxAllowablePINTries = 3;
+	private int Pintries = 0;
 	
 	private int AmountToWithdraw;
 	//statuses 
@@ -48,8 +49,16 @@ public class ATM_GUI {
 	private Vector<Integer> Data = new Vector<Integer>();
 	
 	//this is the systems state varaible
+	private static final int PNstart = 0;
+	private static final int PNWelcome = 1;
+	private static final int PNCheckPIN = 2;
+	private static final int PNInputWithDrawAmmount = 3;
+	private static final int PNVerifyBalence = 4;
+	private static final int PNVerifyBillsAvailability = 5;
+	private static final int PNDisburseBills = 6;
+	private static final int PNEjectCard= 7;
+	private static final int PNSystemFailure = 8;
 	private int PN = 0;
-	
 	private boolean EnterKeyPressed;
 	private boolean CancelkeyPressed;
 	private boolean EjectCard;
@@ -93,6 +102,7 @@ public class ATM_GUI {
 			//throw exception 
 			PN = 8;
 		}
+		PN =2;
 		
 	}
 	
@@ -107,35 +117,32 @@ public class ATM_GUI {
 	}
 	
 	private void addData(int dataValue) {
-		if(mytime.timing_done) {
-			Data.clear();
-			mainTextBox.setText("Welcome " + person_Name +"Please enter Your Pin");
-			mytime = new TimingThread();
-			mytime.start();
-			
-		}else {
-		if(CardInserted || DataEntered) {
+		if(PN ==2 ) {
+		if(CardInserted) {
 			//this should not work this way wait till user presses enter on keypad
 		if(Data.size() == 4) {
-			DataEntered = true;
-			//trigger code to run
-			mytime.timing_done = true;
-			checkPin();
+			
 		}else {
 		Data.add(dataValue);
 		mainTextBox.setText("PIN:  "+Data.toString());
-		//add timing thread 
-		
 		}
 		}
 		}
-		//button does nothing
-		
+		if(PN == PNInputWithDrawAmmount) {
+			Data.add(dataValue);
+			mainTextBox.setText("Amount: "+Data.toString());
+		}
 	}
+
+		
 	private void deleteData() {
-		if(Data.size() > 0)
+		if(Data.size() > 0) {
 			Data.remove(Data.lastElement());
-		mainTextBox.setText("PIN:  "+Data.toString());
+			if(PN == 2 )
+				mainTextBox.setText("PIN:  "+Data.toString());
+			if(PN == PNInputWithDrawAmmount)
+				mainTextBox.setText("Amount:  "+Data.toString());
+		}
 	}
 	public void cancel() {
 		Data.clear();
@@ -146,10 +153,18 @@ public class ATM_GUI {
 		if(DataEntered != true) {
 			
 		}
-		System.out.println("In checking pin");
-		boolean waspingood = atmdb.checkPin(Data , 1234567);
-		System.out.println("the pin was: "+waspingood);
-		
+		//System.out.println("In checking pin");
+		boolean pingood = atmdb.checkPin(Data , 1234567);
+		Data.clear();
+		//System.out.println("the pin was: "+waspingood);
+		if(!pingood) {
+			mainTextBox.setText("Wrong pin try againPIN:  "+Data.toString());
+			DataEntered = false;
+			PN =2;
+			return;
+		}
+		PN = PNInputWithDrawAmmount;
+		mainTextBox.setText("Please enter amount to withdraw: ");
 	}
 	/**
 	 * Create the application.
@@ -222,6 +237,7 @@ public class ATM_GUI {
 		keyPad_Panel.add(keyPad_0);
 		
 		JButton keyPad_ENTER = new JButton("ENTER");
+		
 		keyPad_ENTER.setBounds(224, 131, 97, 25);
 		keyPad_Panel.add(keyPad_ENTER);
 		
@@ -255,7 +271,36 @@ public class ATM_GUI {
 		
 		
 		//keypad action listener
-		
+		keyPad_ENTER.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				switch(PN) {
+					
+					case 2:
+					if(Data.size() == 4) {
+						DataEntered = true;
+						mytime.timing_done = true;
+						checkPin();
+					}
+					break;
+					case 3:
+					if(atmdb.vectoint(Data) > MaxALLowableWithdraw) {
+						mainTextBox.setText("The ATM can only handle withdraws up to: " + MaxALLowableWithdraw);
+					}else{
+						PN = PNVerifyBalence;
+						boolean amountgood = atmdb.checkBalence(Data, 1234567);
+						Data.clear();
+						if(amountgood) {
+							
+						}else {
+							PN = PNInputWithDrawAmmount;
+							mainTextBox.setText("your to poor try again: ");
+						}
+					}
+					break;
+					
+				}
+			}
+		});
 		btnCancelTransaction.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				cancel();
@@ -316,6 +361,7 @@ public class ATM_GUI {
 				addData(0);
 			}
 		});
+		PN =1;
 		Welcome();
 		//can't figure out how to add a Jpanel to the frame
 		//CreditCardV2 myCreditCard = new CreditCardV2();

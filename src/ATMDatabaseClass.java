@@ -30,18 +30,48 @@ public class ATMDatabaseClass {
     	 }
     	 
     }
+    public int vectoint(Vector<Integer> vecnum) {
+    	int x = 0;
+		for(int i = 0; i <vecnum.size(); i++) {
+			x += Math.pow(10, i)*vecnum.get(vecnum.size()-i -1); 
+		}
+		return x;
+    }
+    public boolean checkBalence(Vector<Integer> amountVector, int accountNum) {
+    	int amount = vectoint(amountVector);
+    	System.out.println("checking for amount: "+amount);
+    	try {
+			preparedStatement = connect.prepareStatement("SELECT balance FROM system_database WHERE accountNum = "+ accountNum);
+			resultSet = preparedStatement.executeQuery();
+			if(!resultSet.next()) {
+				
+				return false;
+			}
+			while(resultSet.next()) {
+				//this should return first name in database it does for me
+				System.out.println(resultSet.getString(1));
+			}
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return false;
+    }
     public boolean checkPin(Vector<Integer> pinVector , int accountNum) {
     	try {
-    		int pin = 0;
-    		for(int i = 0; i <4; i++) {
-    			pin += Math.pow(10, i)*pinVector.get(3-i); 
-    		}
+    		int pin = vectoint(pinVector);
     		System.out.println("checking for pin : "+ pin);
-    		System.out.println("SELECT user FROM "+MYSQL_DATABASE + " WHERE accountNum  = " + accountNum+ " AND pin = " +pin);
-			preparedStatement  = connect.prepareStatement("SELECT user FROM "+MYSQL_DATABASE + "WHERE accountNum  = " + accountNum+ " AND pin = " +pin+";");
+    		//System.out.println("SELECT user FROM system_database WHERE accountNum  = " +accountNum+ " AND pin = " +pin);
+			preparedStatement  = connect.prepareStatement("SELECT pin FROM system_database WHERE accountNum  = " + accountNum+ " AND pin = " +pin+";");
 			resultSet = preparedStatement.executeQuery();
-			if(resultSet.wasNull()) {
+			if(!resultSet.next()) {
+				
 				return false;
+			}
+			while(resultSet.next()) {
+				//this should return first name in database it does for me
+				System.out.println(resultSet.getString(1));
 			}
 			return true;
 		} catch (SQLException e) {
@@ -77,7 +107,7 @@ public class ATMDatabaseClass {
 	public static void main(String[] args) {
 		System.out.println("testing atmdb class");
 		ATMDatabaseClass atmdb = new ATMDatabaseClass();
-		atmdb.connect();
+		//atmdb.connect();
 		System.out.println("connected");
 		try {
 			
@@ -88,6 +118,17 @@ public class ATMDatabaseClass {
 				System.out.println(atmdb.resultSet.getString(1));
 			}
 			System.out.println();
+			int accountNum = 1234567;
+			int pin = 1235;
+			atmdb.preparedStatement = atmdb.connect.prepareStatement("SELECT user FROM system_database WHERE accountNum  = " + accountNum+ " AND pin = " +pin+";");
+			atmdb.resultSet = atmdb.preparedStatement.executeQuery();
+			if(!atmdb.resultSet.next()) {
+				System.out.println("no result found");
+			}
+			while(atmdb.resultSet.next()) {
+				//this should return first name in database it does for me
+				System.out.println(atmdb.resultSet.getString(1));
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
