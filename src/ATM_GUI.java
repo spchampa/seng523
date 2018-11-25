@@ -290,7 +290,11 @@ public class ATM_GUI {
 						boolean amountgood = atmdb.checkBalence(Data, 1234567);
 						Data.clear();
 						if(amountgood) {
-							
+							mainTextBox.setText("Checking if bills are available please wait");
+							PN = PNVerifyBillsAvailability;
+							//something
+							PN = PNDisburseBills;
+							mainTextBox.setText("Disburing Bills");
 						}else {
 							PN = PNInputWithDrawAmmount;
 							mainTextBox.setText("your to poor try again: ");

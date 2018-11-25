@@ -39,18 +39,23 @@ public class ATMDatabaseClass {
     }
     public boolean checkBalence(Vector<Integer> amountVector, int accountNum) {
     	int amount = vectoint(amountVector);
+    	int tempbalance = 0;
     	System.out.println("checking for amount: "+amount);
     	try {
-			preparedStatement = connect.prepareStatement("SELECT balance FROM system_database WHERE accountNum = "+ accountNum);
+			preparedStatement = connect.prepareStatement("SELECT balance FROM system_database WHERE accountNum = "+ accountNum + " AND balance >= "+amount);
 			resultSet = preparedStatement.executeQuery();
 			if(!resultSet.next()) {
 				
 				return false;
 			}
-			while(resultSet.next()) {
-				//this should return first name in database it does for me
-				System.out.println(resultSet.getString(1));
-			}
+
+			//this should return first name in database it does for me
+			System.out.println(" current balence is: " +resultSet.getString(1));
+			tempbalance = Integer.parseInt(resultSet.getString(1));
+			tempbalance = tempbalance - amount;
+			System.out.println(" new balance is: " +tempbalance);
+			preparedStatement = connect.prepareStatement("UPDATE system_database SET balance ="+ tempbalance +" WHERE accountNum = "+ accountNum);
+			preparedStatement.executeUpdate();
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
