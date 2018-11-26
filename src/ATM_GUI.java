@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+
+
 import javax.swing.UIManager;
 
 import java.awt.BorderLayout;
@@ -318,28 +320,33 @@ public class ATM_GUI {
 					}
 					break;
 					case 3:
-					if(atmdb.vectoint(Data) > MaxALLowableWithdraw) {
-						mainTextBox.setText("The ATM can only handle withdraws up to: " + MaxALLowableWithdraw);
-					}else{
-						PN = PNVerifyBalence;
-						int remainingBal = atmdb.checkBalence(Data, 1234567);
-						Data.clear();
-						if(remainingBal >= 0) {
-							mainTextBox.setText("Checking if bills are available please wait");
-							PN = PNVerifyBillsAvailability;
-							//TODO implement this
-							PN = PNDisburseBills;
-							mainTextBox.setText("Disburing Bills and Ejecting Card, Remaining balance is: " + remainingBal);
-							CardInserted = false;
-							ejectTimer.start();
-						}else {
-							PN = PNInputWithDrawAmmount;
-							mainTextBox.setText("your to poor try again: ");
+						if(atmdb.vectoint(Data) > MaxALLowableWithdraw) {
+							mainTextBox.setText("The ATM can only handle withdraws up to: " + MaxALLowableWithdraw);
+						}else{
+							PN = PNVerifyBalence;
+							int remainingBal = atmdb.checkBalence(Data, 1234567);
+							if(remainingBal >= 0) {
+								mainTextBox.setText("Checking if bills are available please wait");
+								PN = PNVerifyBillsAvailability;
+								//TODO implement this
+								PN = PNDisburseBills;
+								mainTextBox.setText("Disburing Bills, Remaining balance is: " + remainingBal);
+								int amount = atmdb.vectoint(Data);
+								System.out.println("amount equal: "+amount);
+								for(int i = 0; i< amount ;i++) {
+									dollarbill frame = new dollarbill();
+									frame.setVisible(true);
+								}
+								Data.clear();
+							}else {
+								PN = PNInputWithDrawAmmount;
+								mainTextBox.setText("your to poor try again: ");
+								Data.clear();
+							}
 						}
-					}
-					break;
-					
-				}
+						break;
+
+						}
 			}
 		});
 		btnCancelTransaction.addActionListener(new ActionListener() {

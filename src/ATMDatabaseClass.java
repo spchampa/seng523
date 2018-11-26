@@ -14,7 +14,7 @@ public class ATMDatabaseClass {
     private ResultSet resultSet = null;
     
     private final String MYSQL_USERNAME  = "root";
-    private final String MYSQL_PASSWORD = "N@rdKeen2330";
+    private final String MYSQL_PASSWORD = "abc123";
     private final String MYSQL_DATABASE = "system_database";
     
     private void connect() {
