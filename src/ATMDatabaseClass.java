@@ -14,8 +14,8 @@ public class ATMDatabaseClass {
     private ResultSet resultSet = null;
     
     private final String MYSQL_USERNAME  = "root";
-    private final String MYSQL_PASSWORD = "testtest";
-    private final String MYSQL_DATABASE = "seng523";
+    private final String MYSQL_PASSWORD = "abc123";
+    private final String MYSQL_DATABASE = "system_database";
     
     private void connect() {
     	 try {
@@ -23,7 +23,7 @@ public class ATMDatabaseClass {
              Class.forName("com.mysql.jdbc.Driver");
              // Setup the connection with the DB
              connect = DriverManager
-                     .getConnection("jdbc:mysql://localhost:3306/seng523?useSSL=false"
+                     .getConnection("jdbc:mysql://localhost:3306/atmdb?useSSL=false"
                              ,MYSQL_USERNAME ,MYSQL_PASSWORD);
     	 }catch(Exception e) {
     		 
