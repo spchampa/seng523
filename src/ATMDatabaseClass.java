@@ -14,8 +14,8 @@ public class ATMDatabaseClass {
     private ResultSet resultSet = null;
     
     private final String MYSQL_USERNAME  = "root";
-    private final String MYSQL_PASSWORD = "abc123";
-    private final String MYSQL_DATABASE = "system_database";
+    private final String MYSQL_PASSWORD = "testtest";
+    private final String MYSQL_DATABASE = "seng523";
     
     private void connect() {
     	 try {
@@ -23,7 +23,7 @@ public class ATMDatabaseClass {
              Class.forName("com.mysql.jdbc.Driver");
              // Setup the connection with the DB
              connect = DriverManager
-                     .getConnection("jdbc:mysql://localhost:3306/atmdb?useSSL=false"
+                     .getConnection("jdbc:mysql://localhost:3306/seng523?useSSL=false"
                              ,MYSQL_USERNAME ,MYSQL_PASSWORD);
     	 }catch(Exception e) {
     		 
@@ -37,7 +37,7 @@ public class ATMDatabaseClass {
 		}
 		return x;
     }
-    public boolean checkBalence(Vector<Integer> amountVector, int accountNum) {
+    public int checkBalence(Vector<Integer> amountVector, int accountNum) {
     	int amount = vectoint(amountVector);
     	int tempbalance = 0;
     	System.out.println("checking for amount: "+amount);
@@ -46,7 +46,7 @@ public class ATMDatabaseClass {
 			resultSet = preparedStatement.executeQuery();
 			if(!resultSet.next()) {
 				
-				return false;
+				return -1;
 			}
 
 			//this should return first name in database it does for me
@@ -56,19 +56,19 @@ public class ATMDatabaseClass {
 			System.out.println(" new balance is: " +tempbalance);
 			preparedStatement = connect.prepareStatement("UPDATE system_database SET balance ="+ tempbalance +" WHERE accountNum = "+ accountNum);
 			preparedStatement.executeUpdate();
-			return true;
+			return tempbalance;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	return false;
+    	return -1;
     }
     public boolean checkPin(Vector<Integer> pinVector , int accountNum) {
     	try {
     		int pin = vectoint(pinVector);
     		System.out.println("checking for pin : "+ pin);
     		//System.out.println("SELECT user FROM system_database WHERE accountNum  = " +accountNum+ " AND pin = " +pin);
-			preparedStatement  = connect.prepareStatement("SELECT pin FROM system_database WHERE accountNum  = " + accountNum+ " AND pin = " +pin+";");
+			preparedStatement  = connect.prepareStatement("SELECT pin FROM system_database WHERE accountNum  = "+accountNum+" AND pin = "+pin+";");
 			resultSet = preparedStatement.executeQuery();
 			if(!resultSet.next()) {
 				
@@ -112,7 +112,7 @@ public class ATMDatabaseClass {
 	public static void main(String[] args) {
 		System.out.println("testing atmdb class");
 		ATMDatabaseClass atmdb = new ATMDatabaseClass();
-		//atmdb.connect();
+		atmdb.connect();
 		System.out.println("connected");
 		try {
 			

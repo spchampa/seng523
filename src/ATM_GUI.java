@@ -109,7 +109,7 @@ public class ATM_GUI {
 	private void CardInserted() {
 		CardInserted = true;
 		//check in database for number
-		mainTextBox.setText("Welcome " + person_Name +"Please enter Your Pin");
+		mainTextBox.setText("Welcome " + person_Name +" Please enter Your Pin");
 		mytime = new TimingThread();
 		mytime.gui = this;
 		mytime.start();
@@ -287,14 +287,14 @@ public class ATM_GUI {
 						mainTextBox.setText("The ATM can only handle withdraws up to: " + MaxALLowableWithdraw);
 					}else{
 						PN = PNVerifyBalence;
-						boolean amountgood = atmdb.checkBalence(Data, 1234567);
+						int remainingBal = atmdb.checkBalence(Data, 1234567);
 						Data.clear();
-						if(amountgood) {
+						if(remainingBal >= 0) {
 							mainTextBox.setText("Checking if bills are available please wait");
 							PN = PNVerifyBillsAvailability;
-							//something
+							//TODO implement this
 							PN = PNDisburseBills;
-							mainTextBox.setText("Disburing Bills");
+							mainTextBox.setText("Disburing Bills, Remaining balance is: " + remainingBal);
 						}else {
 							PN = PNInputWithDrawAmmount;
 							mainTextBox.setText("your to poor try again: ");
