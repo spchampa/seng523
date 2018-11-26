@@ -18,6 +18,9 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
 //import CreditCard.java;
 public class ATM_GUI {
 
@@ -69,8 +72,11 @@ public class ATM_GUI {
 	//signals are not included 
 	
 	TimingThread mytime;
+	ClockTimingThread clocktime;
 	//For system to write to user
 	private JLabel mainTextBox;
+	// The JLabel for the time
+	public static JLabel lblTime;
 	/**
 	 * Launch the application.
 	 */
@@ -93,6 +99,17 @@ public class ATM_GUI {
 	public void clearData() {
 		Data.clear();
 		mainTextBox.setText("Enter Pin");
+	}
+	
+	/**
+	 * Get the current Time using the java's Date class
+	 */
+	public static void getCurrentTimeUsingDate() {
+	    Date date = new Date();
+	    String strDateFormat = "hh:mm:ss a";
+	    SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+	    String formattedDate= dateFormat.format(date);
+	    lblTime.setText(formattedDate);
 	}
 
 	protected void Welcome() {
@@ -251,6 +268,19 @@ public class ATM_GUI {
 		lblGroupAtm.setHorizontalAlignment(SwingConstants.CENTER);
 		lblGroupAtm.setBounds(12, 22, 1071, 29);
 		frame.getContentPane().add(lblGroupAtm);
+		
+		Date date = new Date();
+	    String strDateFormat = "hh:mm:ss a";
+	    SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+	    String formattedDate= dateFormat.format(date);
+	    lblTime = new JLabel(formattedDate);
+		lblTime.setFont(new Font("Tahoma", Font.BOLD, 24));
+		lblTime.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTime.setBounds(400, 22, 1071, 29);
+		frame.getContentPane().add(lblTime);
+		clocktime = new ClockTimingThread();
+		clocktime.gui = this;
+		clocktime.start();
 		
 		mainTextBox = new JLabel("New label");
 		mainTextBox.setFont(new Font("Tahoma", Font.BOLD, 24));
