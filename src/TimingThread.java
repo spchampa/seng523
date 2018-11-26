@@ -16,7 +16,7 @@ public class TimingThread extends Thread{
             	secounds = 0;
             	for(int i = 0; i< 3 ;i ++) {
             		secounds++; 
-            		Thread.sleep(3000);
+            		Thread.sleep(6000);
             	}
             	if(timing_done == false)
             		gui.clearData();

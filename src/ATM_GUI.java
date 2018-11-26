@@ -24,6 +24,9 @@ public class ATM_GUI {
 	//data base class
 	private ATMDatabaseClass atmdb;
 	
+	//Eject timer
+	private EjectTimingThread ejectTimer;
+	
 	private JFrame frame;
 	//SCB varables 
 	//time currentTimer
@@ -158,7 +161,7 @@ public class ATM_GUI {
 		Data.clear();
 		//System.out.println("the pin was: "+waspingood);
 		if(!pingood) {
-			mainTextBox.setText("Wrong pin try againPIN:  "+Data.toString());
+			mainTextBox.setText("Wrong pin try again");
 			DataEntered = false;
 			PN =2;
 			return;
@@ -180,6 +183,8 @@ public class ATM_GUI {
 		//
 		System.out.println("starting");
 		atmdb = new ATMDatabaseClass();
+		ejectTimer = new EjectTimingThread();
+		ejectTimer.gui = this;
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1117, 703);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -294,7 +299,9 @@ public class ATM_GUI {
 							PN = PNVerifyBillsAvailability;
 							//TODO implement this
 							PN = PNDisburseBills;
-							mainTextBox.setText("Disburing Bills, Remaining balance is: " + remainingBal);
+							mainTextBox.setText("Disburing Bills and Ejecting Card, Remaining balance is: " + remainingBal);
+							CardInserted = false;
+							ejectTimer.start();
 						}else {
 							PN = PNInputWithDrawAmmount;
 							mainTextBox.setText("your to poor try again: ");
