@@ -194,6 +194,15 @@ public class ATM_GUI {
 	public ATM_GUI() {
 		initialize();
 	}
+	
+	/**
+	 * Reset the ejectTimer
+	 */
+	private EjectTimingThread resetEjectTimer(EjectTimingThread ejct) {
+		ejct = new EjectTimingThread();
+		ejct.gui = this;
+		return ejct;
+	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -338,6 +347,8 @@ public class ATM_GUI {
 									frame.setVisible(true);
 								}
 								Data.clear();
+								ejectTimer.start();
+								ejectTimer = resetEjectTimer(ejectTimer);
 							}else {
 								PN = PNInputWithDrawAmmount;
 								mainTextBox.setText("your to poor try again: ");
