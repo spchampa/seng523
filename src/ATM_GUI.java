@@ -38,6 +38,7 @@ public class ATM_GUI {
 	private int Timer;
 	
 	private static final int MaxALLowableWithdraw = 500;
+	private int CashInMachine = 30;
 	private static final int MaxAllowablePINTries = 3;
 	private int Pintries = 0;
 	
@@ -115,7 +116,7 @@ public class ATM_GUI {
 	}
 
 	protected void Welcome() {
-		mainTextBox.setText("Welcome! Please enter Your card");
+		mainTextBox.setText("Welcome! Please Enter Your card");
 		if(MonitorStatus == false) {
 			//throw exception 
 			PN = 8;
@@ -131,7 +132,7 @@ public class ATM_GUI {
 	private void CardInserted() {
 		CardInserted = true;
 		//check in database for number
-		mainTextBox.setText("Welcome " + person_Name +" Please enter Your Pin");
+		mainTextBox.setText("Welcome " + person_Name +", Please Enter Your Pin:");
 		mytime = new TimingThread();
 		mytime.gui = this;
 		mytime.start();
@@ -203,6 +204,8 @@ public class ATM_GUI {
 		ejct.gui = this;
 		return ejct;
 	}
+	
+	
 
 	/**
 	 * Initialize the contents of the frame.
@@ -301,7 +304,7 @@ public class ATM_GUI {
 		mainTextBox.setBounds(107, 136, 663, 263);
 		frame.getContentPane().add(mainTextBox);
 		
-		JButton btnInsertCardButton = new JButton("insert Card Button");
+		JButton btnInsertCardButton = new JButton("Insert Card Button");
 		btnInsertCardButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				CardInserted();
@@ -337,10 +340,15 @@ public class ATM_GUI {
 							if(remainingBal >= 0) {
 								mainTextBox.setText("Checking if bills are available please wait");
 								PN = PNVerifyBillsAvailability;
-								//TODO implement this
+								int amount = atmdb.vectoint(Data);
+								if (amount > CashInMachine) {
+									mainTextBox.setText("Not enough cash, please enter smaller amount");
+									PN = PNInputWithDrawAmmount;
+									Data.clear();
+									break;
+								}
 								PN = PNDisburseBills;
 								mainTextBox.setText("Disburing Bills, Remaining balance is: " + remainingBal);
-								int amount = atmdb.vectoint(Data);
 								System.out.println("amount equal: "+amount);
 								for(int i = 0; i< amount ;i++) {
 									dollarbill frame = new dollarbill();
@@ -351,7 +359,7 @@ public class ATM_GUI {
 								ejectTimer = resetEjectTimer(ejectTimer);
 							}else {
 								PN = PNInputWithDrawAmmount;
-								mainTextBox.setText("your to poor try again: ");
+								mainTextBox.setText("You are too poor try again: ");
 								Data.clear();
 							}
 						}
