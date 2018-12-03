@@ -116,6 +116,8 @@ public class ATM_GUI {
 	}
 
 	protected void Welcome() {
+		mytime = new TimingThread();
+		mytime.gui = this;
 		mainTextBox.setText("Welcome! Please Enter Your card");
 		if(MonitorStatus == false) {
 			//throw exception 
@@ -133,8 +135,6 @@ public class ATM_GUI {
 		CardInserted = true;
 		//check in database for number
 		mainTextBox.setText("Welcome " + person_Name +", Please Enter Your Pin:");
-		mytime = new TimingThread();
-		mytime.gui = this;
 		mytime.start();
 		
 	}

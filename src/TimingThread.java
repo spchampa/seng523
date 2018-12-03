@@ -4,7 +4,7 @@ public class TimingThread extends Thread{
 	public ATM_GUI gui;
 	public boolean timing_done;
 	private int secounds;
-	@SuppressWarnings("deprecation")
+
 	public void run() {
         
         // Loop for ten iterations.
@@ -13,10 +13,10 @@ public class TimingThread extends Thread{
             // Sleep for a while
             try {
             	timing_done = false;
-            	secounds = 0;
-            	for(int i = 0; i< 3 ;i ++) {
-            		secounds++; 
-            		Thread.sleep(6000);
+            	//secounds = 0;
+            	for(int i = 0; i< 1 ;i ++) {
+            		//secounds++; 
+            		Thread.sleep(8000);
             	}
             	if(timing_done == false)
             		gui.clearData();
