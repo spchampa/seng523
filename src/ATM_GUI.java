@@ -169,8 +169,12 @@ public class ATM_GUI {
 	}
 	public void cancel() {
 		Data.clear();
-		Welcome();
+		mainTextBox.setText("Ejecting your card");
 		mytime.timing_done = true;
+		ejectTimer.start();
+		ejectTimer = resetEjectTimer(ejectTimer);
+		//Welcome();
+		
 	}
 	private void checkPin() {
 		if(DataEntered != true) {
@@ -334,21 +338,22 @@ public class ATM_GUI {
 					case 3:
 						if(atmdb.vectoint(Data) > MaxALLowableWithdraw) {
 							mainTextBox.setText("The ATM can only handle withdraws up to: " + MaxALLowableWithdraw);
-						}else{
+							Data.clear();
+						}else if (atmdb.vectoint(Data) > CashInMachine){
+							mainTextBox.setText("Not enough cash, please enter smaller amount");
+							Data.clear();
+
+						}
+						else{
+							CashInMachine -= atmdb.vectoint(Data);
 							PN = PNVerifyBalence;
 							int remainingBal = atmdb.checkBalence(Data, 1234567);
 							if(remainingBal >= 0) {
 								mainTextBox.setText("Checking if bills are available please wait");
 								PN = PNVerifyBillsAvailability;
 								int amount = atmdb.vectoint(Data);
-								if (amount > CashInMachine) {
-									mainTextBox.setText("Not enough cash, please enter smaller amount");
-									PN = PNInputWithDrawAmmount;
-									Data.clear();
-									break;
-								}
 								PN = PNDisburseBills;
-								mainTextBox.setText("Disburing Bills, Remaining balance is: " + remainingBal);
+								mainTextBox.setText("Disburing bills and card, balance is: " + remainingBal);
 								System.out.println("amount equal: "+amount);
 								for(int i = 0; i< amount ;i++) {
 									dollarbill frame = new dollarbill();
